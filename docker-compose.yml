@@ -1,0 +1,38 @@
+version: '3'
+services:
+  frontend:
+    build: ./client
+    container_name: react-ui
+    ports:
+      - "5173:5173"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+    networks:
+      - mern-network
+
+  backend:
+    build: ./api
+    container_name: node-api
+    restart: always
+    ports:
+      - "4000:4000"
+    depends_on:
+      - database
+    networks:
+      - mern-network
+
+  database:
+    image: mongo
+    container_name: mongo-db 
+    ports: 
+      - "27017:27017"
+    volumes: 
+      - /home/ubuntu/mongo-backup:/data/db
+    networks:
+      - mern-network
+
+networks:
+  mern-network:
+    driver: bridge
